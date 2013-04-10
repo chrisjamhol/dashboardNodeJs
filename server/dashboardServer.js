@@ -14,7 +14,7 @@ app.use(express.static(__publicPath));
 
 app.get('/', function (req, res) {
     console.log("check");
-    res.sendfile(__dirname+'/index.html');
+    res.sendfile(__publicPath+'/login/login.html');
 });
 
 app.get('/test',function(req, res){
