@@ -1,0 +1,34 @@
+body{margin:0px;padding:0px;}
+
+#wrapper{
+	position: absolute;
+	width: 100%;
+	height: 100%;
+}
+
+nav{
+	float: left;
+	height: 100%;
+	padding: 10px;
+	background-color: #31353E;
+}
+	nav ul{
+		padding: 0px;
+		margin: 0px;
+		list-style: none;
+	}
+
+	nav ul li img{
+		max-width: 50px;
+		max-height: 50px;
+	}
+
+#appSpace{
+	float: left;
+	height: 100%;
+}
+
+.dashboardApp{
+	float: left;
+	padding: 15px;
+}

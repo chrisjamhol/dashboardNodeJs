@@ -1,3 +1,6 @@
-<section>
-	<iframe src="https://embed.spotify.com/?uri=spotify:track:41pOIT2t1rvr2Trg1HQChZ" width="300" height="380" frameborder="0" allowtransparency="true"></iframe>
+<section id="spotify_app" class="dashboardApp">
+	<h2><%=heading%></h2>
+	<section id="spotify_playlists">
+		<%for(var i=0;i<playlists.length;i++){%><%-playlists[i]%><%}%>
+	</section>
 </section

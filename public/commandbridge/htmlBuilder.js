@@ -1,12 +1,14 @@
-var HtmlBuilder = function(res, __publicPath)
+var HtmlBuilder = function(res, __publicPaths)
 {
-	this.publicPath = __publicPath;
+	this.publicPaths = __publicPaths;
+	this.publicPath = __publicPaths.publicPathViews;
 	this.res = res;
 	_htmlCont = '<body>';
 	_headCont = '';
 	_start = '<!Doctype html><html>';
 	_end = '</html>';
-	_title = '<title></title>'
+	_title = '<title></title>';
+	this.fs = require('fs');
 
 	this.render = function(file,options,callback){
 		if(typeof(options) == 'undefined'){
@@ -28,15 +30,24 @@ var HtmlBuilder = function(res, __publicPath)
 	}
 	this.resetBody = function(){_htmlCont = '<body>';}
 
-	this.addHead = function(){
-
+	this.addHead = function(newheadcont){
+		_headCont += newheadcont;
 	}
+		this.addScript = function(src){this.addHead('<script src="'+src+'"></script>');}
+		this.addStyle = function(href){this.addHead('<link rel="stylesheet" type="text/css" href="'+href+'">');}
 	this.resetTitle = function(){_title = '';}
 
 	this.setTitel = function(title){_title = '<title>'+title+'</title>'}
 
 	this.send = function(){this.res.write(_start+'<head>'+_title+_headCont+"</head>"+_htmlCont+'</body>'+_end);this.res.end();}
 
+	this.useJquery = function(option){
+		if(option){this.addHead('<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>');}else{}
+	}
+
+	this.useSocketIo = function(option){
+		if(option){this.addHead('<script src="socket.io/socket.io.js"></script>');}else{}
+	}
 }
 
-exports.do = function(res,__publicPath){return new HtmlBuilder(res,__publicPath);}
+exports.do = function(res,__publicPaths){return new HtmlBuilder(res,__publicPaths);}
