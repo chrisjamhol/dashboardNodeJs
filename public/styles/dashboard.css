@@ -18,9 +18,15 @@ nav{
 		list-style: none;
 	}
 
+	nav ul li{
+		display: block;
+		text-align: center;
+	}
+
 	nav ul li img{
 		max-width: 50px;
 		max-height: 50px;
+		margin-bottom: 15px;
 	}
 
 #appSpace{

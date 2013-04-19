@@ -60,7 +60,7 @@ app.get('/:widgetname', function (req, res) {
 app.get('/public/scripts/:scriptName',function(req,res){res.sendfile(__publicPaths.publicPathScripts+req.params['scriptName']);});
 app.get('/public/styles/:styleName',function(req,res){res.sendfile(__publicPaths.publicPathStyles+req.params['styleName']);});
 app.get('/public/sockets/:socketName',function(req,res){res.sendfile(__publicPaths.publicPathSockets+req.params['socketName']);});
-app.get('/public/images/:imageName',function(req,res){console.log("image requested");res.sendfile(__publicPaths.publicImagePath+req.params['imageName']);});
+app.get('/public/images/:imageName',function(req,res){res.sendfile(__publicPaths.publicImagePath+req.params['imageName']);});
 
 app.get('/test',function(req, res){
   res.sendfile(__publicPaths.publicPathViews+'/test.html');

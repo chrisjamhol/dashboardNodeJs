@@ -11,7 +11,6 @@ var Dashboard = function(params,view,db)
 		this.view.addScript('/public/scripts/dashboardFront.js');
 		//this.view.addScript('/public/scripts/dashboardSocked.js');
 		getAppNavItems(function(){
-			console.log(tempVars);
 			this.view.addBody('dashboard',tempVars);
 			this.view.send();
 		});
@@ -26,7 +25,6 @@ var Dashboard = function(params,view,db)
 						apps.forEach(function(app){
 							appNavItems += '<li><img src="'+app.logo+'" /></li>';
 						});
-						console.log(appNavItems);
 						tempVars.appNavItems = appNavItems;
 						callback();
 					});
