@@ -19,7 +19,7 @@ var Dashboard = function(params,view,db)
 	function getAppNavItems(callback){
 		var appNavItems = "";
 		db.collection('user',function(err,users){
-			users.find({id:params.userId}).toArray(function(err,user){
+			users.find({id:params.query.userId}).toArray(function(err,user){
 				db.collection('apps',function(err,userapps){
 					userapps.find({id:{$in:user[0]['apps']}}).toArray(function(err,apps){
 						apps.forEach(function(app){
