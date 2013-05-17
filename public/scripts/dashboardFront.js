@@ -4,7 +4,7 @@ $('document').ready(function(){
 		$('head').append('<script src="'+socketName+'"></script>');
   	});
 	//socket.emit('loadApps');
-	socket.emit('loadApp','spotify');
+	socket.emit('loadApp','facebook');
 });
 function htmlEncode(html){return $('<div>').text(html).html();}
 function htmlDecode(string){return $('<div>').html(string).text();}

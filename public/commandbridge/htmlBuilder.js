@@ -41,6 +41,8 @@ var HtmlBuilder = function(res, __publicPaths)
 
 	this.send = function(){this.res.write(_start+'<head>'+_title+_headCont+"</head>"+_htmlCont+'</body>'+_end);this.res.end();}
 
+	this.redirect = function(url){this.res.redirect(url); this.res.end();};
+
 	this.useJquery = function(option){
 		if(option){this.addHead('<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>');}else{}
 	}

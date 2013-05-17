@@ -22,6 +22,7 @@ var express = require('express')
     server.listen(80);
     console.log("Server started");
   //config express server
+app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 app.use(app.router);
 app.use(express.compress());
 app.use(express.static(__publicPaths.publicPathViews));
@@ -54,6 +55,34 @@ app.get('/:widgetname', function (req, res) {
       var widget = require(__modelsPath+req.params['widgetname']+".js").do(params,view);
       widget.sayHi();
     }
+});
+
+app.get('/auth/facebook', function(req, res) {
+
+    if (!req.query.code) {
+      graph = require('fbgraph');
+      var grapfConf = {
+          client_id:      '521160077934696'
+        , client_secret:  '3813023f0a92c427240714cd976828b8'
+        , scope:          'email, user_about_me, user_birthday, user_location, publish_stream'
+        , redirect_uri:   'http://dashboardnode.pagekite.me/auth/facebook'
+      };
+      console.log("1");
+      var authUrl = graph.getOauthUrl({
+          "client_id":     grapfConf.client_id
+        , "redirect_uri":  grapfConf.redirect_uri
+        , "scope":         grapfConf.scope
+      });
+
+      if (!req.query.error) { //checks whether a user denied the app facebook login/permissions
+        console.log("2");
+        res.redirect(authUrl);
+      } else {  //req.query.error == 'access_denied'
+        res.send('access denied');
+      }
+    }
+    console.log("2");
+    res.redirect('/');
 });
 
 //piping css and js

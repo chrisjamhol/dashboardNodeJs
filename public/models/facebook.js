@@ -1,17 +1,21 @@
 var Facebook = function(params,view,socket,db)
 {
+	this.graph = require('../../server/node_modules/fbgraph');
+
 	this.params = params;
 	this.view = view;
 	this.socket = socket;
 
 	function getTemplateVars(callback){
-		/*var playlists = ['<iframe src="https://embed.spotify.com/?uri=spotify:track:2wuXWa84jPUoqN09HwZKs6" width="300" height="380" frameborder="0" allowtransparency="true"></iframe>','<iframe src="https://embed.spotify.com/?uri=spotify:track:2wuXWa84jPUoqN09HwZKs6" width="300" height="380" frameborder="0" allowtransparency="true"></iframe>'];
-		var templateVars = {
-								heading : 'The Spotifywidget',
-								playlists : playlists
-							}*/
 		var templateVars = {};
 		callback(templateVars);
+	}
+
+	function getHomeFeed(callback){
+		var homeFeed = new HomeFeed(this.graph);
+		homeFeed.getFeedHtml(function(feedHtml){
+			callback(feedHtml);
+		});
 	}
 
 	this.deploySocket = function()
@@ -30,6 +34,33 @@ var Facebook = function(params,view,socket,db)
 				});
 			});
 		});
+
+		s.on('facebook_fetchHomeFeed',function(){
+			getHomeFeed(function(homeFeed){
+				s.emit('facebook_getHomeFeed',homeFeed);
+			});
+		});
+	}
+}
+
+var HomeFeed = function(graph){
+	this.homeFeed = "";
+	this.getFeedHtml = function(callback){
+		graph.get('/me/home', function(err, res) {
+	        var stream = res;
+	        for(var i=0; i <= stream.data.length-1; i++)
+	        {
+	          if(stream.data[i]['message'] != null)
+	          {
+	            this.homeFeed += '<div><p>'+stream.data[i]['message']+'</p></div><br />';
+	          }
+	          else if(stream.data[i]['story'] != null)
+	          {
+	            this.homeFeed += '<div><p>'+stream.data[i]['story']+'</p></div><br />';
+	          }
+	        }
+	    });
+		callback(this.homeFeed);
 	}
 }
 
