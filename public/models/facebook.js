@@ -1,7 +1,6 @@
 var Facebook = function(params,view,socket,db)
 {
-	this.graph = require('../../server/node_modules/fbgraph');
-
+	this.feedWrapper = require('./feed.js').do(); //inherit Feed from feed.js
 	this.params = params;
 	this.view = view;
 	this.socket = socket;
@@ -11,20 +10,20 @@ var Facebook = function(params,view,socket,db)
 		callback(templateVars);
 	}
 
-	function getHomeFeed(callback){
-		var homeFeed = new HomeFeed(this.graph);
-		homeFeed.getFeedHtml(function(feedHtml){
+	function getHomeFeed(feedWrapper,callback){
+		var fFeed = feedWrapper.facebook();
+		fFeed.getFeedHtml(function(feedHtml){
 			callback(feedHtml);
 		});
 	}
 
 	this.deploySocket = function()
 	{
-		createSocket(this.socket,this.view);
+		createSocket(this.socket,this.view,this.feedWrapper);
 		return '/public/sockets/facebookSockets.js';
 	}
 
-	createSocket = function(socket,view)
+	function createSocket(socket,view,feedWrapper)
 	{
 		var s = socket;
 		s.on('facebook_getHtml',function(){
@@ -36,7 +35,7 @@ var Facebook = function(params,view,socket,db)
 		});
 
 		s.on('facebook_fetchHomeFeed',function(){
-			getHomeFeed(function(homeFeed){
+			getHomeFeed(feedWrapper,function(homeFeed){
 				s.emit('facebook_getHomeFeed',homeFeed);
 			});
 		});

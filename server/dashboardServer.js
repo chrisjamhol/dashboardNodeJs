@@ -58,31 +58,45 @@ app.get('/:widgetname', function (req, res) {
 });
 
 app.get('/auth/facebook', function(req, res) {
-
+    //console.log(req.query);
+    console.log('in auth/facebook');
     if (!req.query.code) {
-      graph = require('fbgraph');
-      var grapfConf = {
-          client_id:      '521160077934696'
-        , client_secret:  '3813023f0a92c427240714cd976828b8'
-        , scope:          'email, user_about_me, user_birthday, user_location, publish_stream'
-        , redirect_uri:   'http://dashboardnode.pagekite.me/auth/facebook'
-      };
-      console.log("1");
-      var authUrl = graph.getOauthUrl({
-          "client_id":     grapfConf.client_id
-        , "redirect_uri":  grapfConf.redirect_uri
-        , "scope":         grapfConf.scope
-      });
+        graph = require('fbgraph');
+          var grapfConf = {
+              client_id:      '521160077934696'
+            , client_secret:  '3813023f0a92c427240714cd976828b8'
+            , scope:          'email, user_about_me, user_birthday, user_location, publish_stream'
+            , redirect_uri:   'http://dashboardnode.pagekite.me/auth/facebook'
+          };
+          console.log("1");
+          var authUrl = graph.getOauthUrl({
+              "client_id":     grapfConf.client_id
+            , "redirect_uri":  grapfConf.redirect_uri
+            , "scope":         grapfConf.scope
+          });
 
-      if (!req.query.error) { //checks whether a user denied the app facebook login/permissions
-        console.log("2");
-        res.redirect(authUrl);
-      } else {  //req.query.error == 'access_denied'
-        res.send('access denied');
-      }
+          if (!req.query.error) { //checks whether a user denied the app facebook login/permissions
+            console.log("2");
+            res.redirect(authUrl);
+          } else {  //req.query.error == 'access_denied'
+            res.send('access denied');
+          }
     }
-    console.log("2");
-    res.redirect('/');
+    res.redirect('/doauth/facebook?'+req.query.code);
+});
+
+app.get('/doauth/facebook',function(req, res){
+    console.log(req.query.code);
+    if(!req.query.code)
+    {
+        console.log('doauth without ?code');
+        res.redirect('/auth/facebook');
+    }
+    else
+    {
+        console.log('doauth with ?code');
+        res.send(req.query.code);
+    }
 });
 
 //piping css and js
