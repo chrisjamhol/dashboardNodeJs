@@ -4,7 +4,7 @@ socket.on('facebook_receiveHtml',function(html) {
 });
 
 socket.on('facebook_getHomeFeed',function(html){
-	$(html).appendTo('#homeFeed');
+	$('#homeFeed').html(html);
 });
 
 socket.emit('facebook_getHtml');

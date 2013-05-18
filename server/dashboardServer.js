@@ -40,11 +40,44 @@ db = new Db('dashboard', new Server(host,port,{auto_reconnect:true}),{safe:false
 //-----routes--------
 view = "";
 params = "";
+fbcode = "";
+fberror = "";
 app.get('/', function (req, res) {
-      view = require(__htmlBuilder).do(res,__publicPaths);
-      params = req;
-      var dashboard = require(__modelsPath+"dashboard.js").do(params,view,db);
-      dashboard.initLayout();
+    if(fbcode == "")    // not logged in
+    {   
+        fbgraph = require('fbgraph');
+        var authUrl = fbgraph.getOauthUrl({
+                              "client_id":     '521160077934696'
+                            , "redirect_uri":  'http://dashboardnode.pagekite.me/login'
+                            , "scope":         'email, user_about_me, user_birthday, user_location, publish_stream, read_stream'
+            });
+        res.redirect(authUrl);
+    } 
+    view = require(__htmlBuilder).do(res,__publicPaths);
+    params = req;
+    var dashboard = require(__modelsPath+"dashboard.js").do(params,view,db);
+    dashboard.initLayout();
+});
+
+app.get('/login',function(req, res){
+    if (!req.query.code)
+    {
+        if(!req.query.error){}
+        else
+        {fberror = req.query.error;}
+    }
+    else
+    {
+        fbcode = req.query.code;
+        res.redirect('/');
+    }
+});
+
+app.get('/get/fbcode',function(req, res){
+    if(fbcode == "")
+    {res.send(JSON.stringify({error: "not logged in", code: null}));}
+    else
+    {res.send(JSON.stringify({error: null, code: fbcode}));}    
 });
 
 app.get('/:widgetname', function (req, res) {
@@ -53,49 +86,6 @@ app.get('/:widgetname', function (req, res) {
       view = require(__htmlBuilder).do(res,__publicPaths);
       params = req;
       var widget = require(__modelsPath+req.params['widgetname']+".js").do(params,view);
-      widget.sayHi();
-    }
-});
-
-app.get('/auth/facebook', function(req, res) {
-    //console.log(req.query);
-    console.log('in auth/facebook');
-    if (!req.query.code) {
-        graph = require('fbgraph');
-          var grapfConf = {
-              client_id:      '521160077934696'
-            , client_secret:  '3813023f0a92c427240714cd976828b8'
-            , scope:          'email, user_about_me, user_birthday, user_location, publish_stream'
-            , redirect_uri:   'http://dashboardnode.pagekite.me/auth/facebook'
-          };
-          console.log("1");
-          var authUrl = graph.getOauthUrl({
-              "client_id":     grapfConf.client_id
-            , "redirect_uri":  grapfConf.redirect_uri
-            , "scope":         grapfConf.scope
-          });
-
-          if (!req.query.error) { //checks whether a user denied the app facebook login/permissions
-            console.log("2");
-            res.redirect(authUrl);
-          } else {  //req.query.error == 'access_denied'
-            res.send('access denied');
-          }
-    }
-    res.redirect('/doauth/facebook?'+req.query.code);
-});
-
-app.get('/doauth/facebook',function(req, res){
-    console.log(req.query.code);
-    if(!req.query.code)
-    {
-        console.log('doauth without ?code');
-        res.redirect('/auth/facebook');
-    }
-    else
-    {
-        console.log('doauth with ?code');
-        res.send(req.query.code);
     }
 });
 

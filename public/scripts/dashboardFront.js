@@ -3,8 +3,8 @@ $('document').ready(function(){
 	socket.on('receive socket',function(socketName){
 		$('head').append('<script src="'+socketName+'"></script>');
   	});
-	//socket.emit('loadApps');
-	socket.emit('loadApp','facebook');
+	socket.emit('loadApps');
+	//socket.emit('loadApp','facebook');
 });
 function htmlEncode(html){return $('<div>').text(html).html();}
 function htmlDecode(string){return $('<div>').html(string).text();}

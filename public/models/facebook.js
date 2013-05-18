@@ -5,15 +5,16 @@ var Facebook = function(params,view,socket,db)
 	this.view = view;
 	this.socket = socket;
 
-	function getTemplateVars(callback){
+	function getTemplateVars(view,callback){
+		view.addStyle('/public/styles/facebook.css');
 		var templateVars = {};
 		callback(templateVars);
 	}
 
 	function getHomeFeed(feedWrapper,callback){
 		var fFeed = feedWrapper.facebook();
-		fFeed.getFeedHtml(function(feedHtml){
-			callback(feedHtml);
+		fFeed.getFeedHtml(function(homeFeedData){			
+			callback(homeFeedData);
 		});
 	}
 
@@ -27,7 +28,7 @@ var Facebook = function(params,view,socket,db)
 	{
 		var s = socket;
 		s.on('facebook_getHtml',function(){
-			getTemplateVars(function(templateVars){
+			getTemplateVars(view,function(templateVars){
 				view.render('facebook',templateVars,function(err,html){
 					s.emit('facebook_receiveHtml',html);
 				});
@@ -35,31 +36,12 @@ var Facebook = function(params,view,socket,db)
 		});
 
 		s.on('facebook_fetchHomeFeed',function(){
-			getHomeFeed(feedWrapper,function(homeFeed){
-				s.emit('facebook_getHomeFeed',homeFeed);
+			getHomeFeed(feedWrapper,function(homeFeedData){
+				view.render('facebook_homeFeed',{"streamData": homeFeedData},function(err,homeFeedHtml){
+					s.emit('facebook_getHomeFeed',homeFeedHtml);
+				});				
 			});
 		});
-	}
-}
-
-var HomeFeed = function(graph){
-	this.homeFeed = "";
-	this.getFeedHtml = function(callback){
-		graph.get('/me/home', function(err, res) {
-	        var stream = res;
-	        for(var i=0; i <= stream.data.length-1; i++)
-	        {
-	          if(stream.data[i]['message'] != null)
-	          {
-	            this.homeFeed += '<div><p>'+stream.data[i]['message']+'</p></div><br />';
-	          }
-	          else if(stream.data[i]['story'] != null)
-	          {
-	            this.homeFeed += '<div><p>'+stream.data[i]['story']+'</p></div><br />';
-	          }
-	        }
-	    });
-		callback(this.homeFeed);
 	}
 }
 

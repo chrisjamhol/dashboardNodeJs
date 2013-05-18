@@ -31,10 +31,16 @@ nav{
 
 #appSpace{
 	float: left;
+	background-color: #e5e5e5;
 	height: 100%;
 }
 
 .dashboardApp{
 	float: left;
 	padding: 15px;
+	max-width: 500px;
+	max-height: 500px;
+	overflow: scroll;
+	margin: 15px;
+	background-color: white;
 }
