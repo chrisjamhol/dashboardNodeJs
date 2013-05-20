@@ -1,3 +1,91 @@
-<% for(var i = 0; i <= streamData['data'].length -1; i++){ %>
-		<p><%= streamData['data'][i]['from']['name'] %></p>
-<%}%>
+<% for(var i = 0; i <= streamData['data'].length -1; i++){	
+	switch(streamData['data'][i]['type'])
+		{
+			case "status": status(streamData['data'][i]); break;
+			case "photo": photo(streamData['data'][i]); break;
+			case "link": link(streamData['data'][i]); break;
+			default: defaultAction();
+		}	
+	} %>
+
+<% function link(data){ %>
+	
+<% } %>
+
+<% function photo(data){ %>
+	<div class="facebook_post">
+		<div class="facebook_heading">
+			<div class="facebook_heading_picture">
+				<a href="">
+					<img />
+				</a>
+			</div>
+			<div class="facebook_heading_info">
+				<p class="facebook_heading_info_name"><%= data['from']['name'] %>
+					<span class="facebook_heading_info_withTags">
+						<% for(var a = 0; a <= data['with_tags']-1; a++){ %>
+							<%= data['with_tags'][a]['name'] %>
+						<% } %>
+					</span>
+				</p>
+				<p class="facebook_heading_info_shareTime"><%= data['created_time'] %></p>
+			</div>
+		</div>
+		<div class="facebook_body">
+			<div calss="facebook_body_message">
+				<p class="facebook_body_message_text"></p>
+			</div>
+			<div calss="facebook_body_images">
+				<div class="facebook_body_images_1"><p>picture1</p></div>
+				<div calss="facebook_body_images_2"><p>picture2</p></div>
+			</div>
+		</div>
+		<div class="facebook_footer">
+			<div class="facebook_footer_comment">
+				<input type="text" />
+			</div>
+			<div class="facebook_footer_actions">
+				<span class="facebook_footer_actions_like">like</span> <span>usw</span> <span>usw</span>
+			</div>
+		</div>
+	</div>
+<% } %>
+
+<% function status(data){ %>
+	<div class="facebook_post">
+		<div class="facebook_heading">
+			<div class="facebook_heading_picture">
+				<a href="">
+					<img />
+				</a>
+			</div>
+			<div class="facebook_heading_info">
+				<p class="facebook_heading_info_name"><%= data['from']['name'] %>
+					<span class="facebook_heading_info_withTags">
+						<% for(var a = 0; a <= data['with_tags']-1; a++){ %>
+							<%= data['with_tags'][a]['name'] %>
+						<% } %>
+					</span>
+				</p>
+				<p class="facebook_heading_info_shareTime"><%= data['created_time'] %></p>
+			</div>
+		</div>
+		<div class="facebook_body">
+			<div calss="facebook_body_message">
+				<p class="facebook_body_message_text"><%= data['message'] %></p>
+			</div>			
+		</div>
+		<div class="facebook_footer">
+			<div class="facebook_footer_comment">
+				<input type="text" />
+			</div>
+			<div class="facebook_footer_actions">
+				<span class="facebook_footer_actions_like">like</span> <span>usw</span> <span>usw</span>
+			</div>
+		</div>
+	</div>
+<% } %>
+
+<% function defaultAction(){ %>
+	<div class="facebook_defaultType"><p>no type found for this post..</p></div>
+<% } %>

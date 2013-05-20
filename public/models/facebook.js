@@ -6,7 +6,6 @@ var Facebook = function(params,view,socket,db)
 	this.socket = socket;
 
 	function getTemplateVars(view,callback){
-		view.addStyle('/public/styles/facebook.css');
 		var templateVars = {};
 		callback(templateVars);
 	}
@@ -28,6 +27,7 @@ var Facebook = function(params,view,socket,db)
 	{
 		var s = socket;
 		s.on('facebook_getHtml',function(){
+			s.emit('facebook_loadStyle','/public/styles/facebook.css');
 			getTemplateVars(view,function(templateVars){
 				view.render('facebook',templateVars,function(err,html){
 					s.emit('facebook_receiveHtml',html);
@@ -37,7 +37,12 @@ var Facebook = function(params,view,socket,db)
 
 		s.on('facebook_fetchHomeFeed',function(){
 			getHomeFeed(feedWrapper,function(homeFeedData){
+				console.log(homeFeedData['data'][0]);
 				view.render('facebook_homeFeed',{"streamData": homeFeedData},function(err,homeFeedHtml){
+					console.log("\t\t-------------- error-----------------");
+					console.log(err);
+					console.log("\t\t-------------- hmtl-----------------");
+					console.log(homeFeedHtml);
 					s.emit('facebook_getHomeFeed',homeFeedHtml);
 				});				
 			});

@@ -1,3 +1,33 @@
 #facebook_app{
 	height: 100%;
+	background-color: #e5e5e5;
+}
+
+.facebook_post{
+	margin-top: 5px;
+	margin-bottom: 5px;
+	background-color: white;
+}
+
+/* facebook_heading --------------------------------*/
+
+.facebook_heading{
+	height: 50px;
+}
+	.facebook_heading_picture,.facebook_heading_info{float: left;}
+
+	.facebook_heading_info_name{margin: 3px;}
+	.facebook_heading_info_withTags{color:lightgray; font-size: 8px;}
+	.facebook_heading_info_shareTime{color:lightgray; font-size: 8px;}
+
+/* facebook_body --------------------------------*/
+
+.facebook_body{
+
+}
+
+/* facebook_footer --------------------------------*/
+
+.facebook_footer{
+
 }
