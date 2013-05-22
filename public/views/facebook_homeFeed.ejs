@@ -1,91 +1,116 @@
-<% for(var i = 0; i <= streamData['data'].length -1; i++){	
+<%
+	var days = ["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"];
+	var profilePictures = profilePicturesData;
+	for(var i = 0; i <= streamData['data'].length -1; i++){
 	switch(streamData['data'][i]['type'])
 		{
 			case "status": status(streamData['data'][i]); break;
 			case "photo": photo(streamData['data'][i]); break;
 			case "link": link(streamData['data'][i]); break;
-			default: defaultAction();
-		}	
+			case "data" : data(streamData['data'][i]);break;
+			default: defaultAction(streamData['data'][i]['type']);
+		}
 	} %>
+	<% getNextPage(streamData['paging']['next']) %>
 
 <% function link(data){ %>
-	
+	<div class="facebook_post">
+		<div class="facebook_post_wrapper">
+			<% getHead(data) %>
+			<div class="facebook_body">
+				<% getMessage(data) %>
+				<div class="facebook_body_link">
+					<a href="<%=data['link']%>"><%=data['link']%></a>
+				</div>
+			</div>
+			<% getFooter(data) %>
+		</div>
+	</div>
 <% } %>
 
 <% function photo(data){ %>
 	<div class="facebook_post">
-		<div class="facebook_heading">
-			<div class="facebook_heading_picture">
-				<a href="">
-					<img />
-				</a>
+		<div class="facebook_post_wrapper">
+			<% getHead(data) %>
+			<div class="facebook_body">
+				<div class="facebook_body_message">
+					<% getMessage(data) %>
+				</div>
+				<div class="facebook_body_images">
+					<div class="facebook_body_image">
+						<a href="https://facebook.com/<%=data['object_id']%>" target="_blank"><img src="<%=data['picture'].replace("_s","_n")%>"/></a><br >
+						<p class="facebook_body_image_story"><%=data['story']%></p>
+					</div>
+				</div>
 			</div>
-			<div class="facebook_heading_info">
-				<p class="facebook_heading_info_name"><%= data['from']['name'] %>
-					<span class="facebook_heading_info_withTags">
-						<% for(var a = 0; a <= data['with_tags']-1; a++){ %>
-							<%= data['with_tags'][a]['name'] %>
-						<% } %>
-					</span>
-				</p>
-				<p class="facebook_heading_info_shareTime"><%= data['created_time'] %></p>
-			</div>
-		</div>
-		<div class="facebook_body">
-			<div calss="facebook_body_message">
-				<p class="facebook_body_message_text"></p>
-			</div>
-			<div calss="facebook_body_images">
-				<div class="facebook_body_images_1"><p>picture1</p></div>
-				<div calss="facebook_body_images_2"><p>picture2</p></div>
-			</div>
-		</div>
-		<div class="facebook_footer">
-			<div class="facebook_footer_comment">
-				<input type="text" />
-			</div>
-			<div class="facebook_footer_actions">
-				<span class="facebook_footer_actions_like">like</span> <span>usw</span> <span>usw</span>
-			</div>
+			<% getFooter(data) %>
 		</div>
 	</div>
 <% } %>
 
 <% function status(data){ %>
 	<div class="facebook_post">
-		<div class="facebook_heading">
-			<div class="facebook_heading_picture">
-				<a href="">
-					<img />
-				</a>
+		<div class="facebook_post_wrapper">
+			<% getHead(data) %>
+			<div class="facebook_body">
+				<% getMessage(data) %>
 			</div>
-			<div class="facebook_heading_info">
-				<p class="facebook_heading_info_name"><%= data['from']['name'] %>
-					<span class="facebook_heading_info_withTags">
-						<% for(var a = 0; a <= data['with_tags']-1; a++){ %>
-							<%= data['with_tags'][a]['name'] %>
-						<% } %>
-					</span>
-				</p>
-				<p class="facebook_heading_info_shareTime"><%= data['created_time'] %></p>
-			</div>
-		</div>
-		<div class="facebook_body">
-			<div calss="facebook_body_message">
-				<p class="facebook_body_message_text"><%= data['message'] %></p>
-			</div>			
-		</div>
-		<div class="facebook_footer">
-			<div class="facebook_footer_comment">
-				<input type="text" />
-			</div>
-			<div class="facebook_footer_actions">
-				<span class="facebook_footer_actions_like">like</span> <span>usw</span> <span>usw</span>
-			</div>
+			<% getFooter(data) %>
 		</div>
 	</div>
 <% } %>
 
-<% function defaultAction(){ %>
-	<div class="facebook_defaultType"><p>no type found for this post..</p></div>
+<% function video(data){ %>
+
 <% } %>
+
+<% function defaultAction(type){ %>
+	<div class="facebook_defaultType"><p>no type found for this post.. [<%= type %>]</p></div>
+<% } %>
+
+<% function getNextPage(url){ %>
+	<button id="facebook_homeFeedNextPageButton" data-url="<%=url%>">More</a>
+<% } %>
+
+<% // -------------------------------- helper functions -------------------------------------------------------------- %>
+
+<% function getHead(data){ %>
+	<div class="facebook_heading">
+		<div class="facebook_heading_picture">
+			<a href="https://www.facebook.com/<%=data['from']['id']%>" target="_blank">
+				<img src="<%=profilePictures[data['from']['id']]%>"/>
+			</a>
+		</div>
+		<div class="facebook_heading_info">
+			<p class="facebook_heading_info_name"><%= data['from']['name'] %>
+				<span class="facebook_heading_info_withTags">
+					<% for(var a = 0; a <= data['with_tags']-1; a++){ %>
+						<%= data['with_tags'][a]['name'] %>
+					<% } %>
+				</span>
+			</p>
+			<%var date = new Date(data['created_time']); var dateString = days[date.getDay()]+", "+date.getDate()+"."+(date.getMonth()+1)+"."+date.getFullYear()+": "+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();%>
+			<p class="facebook_heading_info_shareTime"><%=dateString%></p>
+		</div>
+	</div>
+<% } %>
+
+<% function getFooter(data){ %>
+	<div class="facebook_footer">
+		<div class="facebook_footer_comment">
+			<input type="text" />
+		</div>
+		<div class="facebook_footer_stats">
+			<span class="facebook_footer_stats_like">likes: <%if(typeof(data['likes']) != "undefined"){%><%= data['likes']['count'] %><%}else{%>0<%}%></span>
+			<span class="facebook_footer_stats_share">shares: <% if(typeof(data['shares']) != "undefined"){%><%= data['shares']['count']%><%}else{%>0<%} %></span>
+			<span class="facebook_footer_stats_comments">comments: <%if(typeof(data['comments']) != "undefined"){%><%= data['comments']['data'].length %><%}else{%>0<%}%></span>
+		</div>
+	</div>
+<% } %>
+
+<% function getMessage(data){ %>
+	<div class="facebook_body_message">
+		<p class="facebook_body_message_text"><% if(typeof(data['message']) != "undefined"){%><%= data['message']%><%}else{%><%= data['story']%><%} %></p>
+	</div>
+<% } %>
+

@@ -44,15 +44,15 @@ fbcode = "";
 fberror = "";
 app.get('/', function (req, res) {
     if(fbcode == "")    // not logged in
-    {   
+    {
         fbgraph = require('fbgraph');
         var authUrl = fbgraph.getOauthUrl({
                               "client_id":     '521160077934696'
                             , "redirect_uri":  'http://dashboardnode.pagekite.me/login'
-                            , "scope":         'email, user_about_me, user_birthday, user_location, publish_stream, read_stream'
+                            , "scope":         'email, user_about_me, user_birthday, user_location, publish_stream, read_stream,user_activities,friends_activities,friends_likes,user_likes,read_requests'
             });
         res.redirect(authUrl);
-    } 
+    }
     view = require(__htmlBuilder).do(res,__publicPaths);
     params = req;
     var dashboard = require(__modelsPath+"dashboard.js").do(params,view,db);
@@ -77,7 +77,7 @@ app.get('/get/fbcode',function(req, res){
     if(fbcode == "")
     {res.send(JSON.stringify({error: "not logged in", code: null}));}
     else
-    {res.send(JSON.stringify({error: null, code: fbcode}));}    
+    {res.send(JSON.stringify({error: null, code: fbcode}));}
 });
 
 app.get('/:widgetname', function (req, res) {

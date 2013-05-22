@@ -5,16 +5,28 @@ var Feed = function()
 		var graph = require('../../server/node_modules/fbgraph'),
 			fFeed = new facebookFeed(graph);
 		return fFeed;
-	}	
+	}
 }
 
 var facebookFeed = function(graph){
 	this.graph = graph;
 	this.homeFeed = "";
 	this.getFeedHtml = function(callback){
-		fetchApi(graph,'/me/home',function(stream){		
+		fetchApi(graph,'/me/home',function(stream){
 			callback(stream);
-		});			
+		});
+	}
+
+	this.getHomeFeedNextPage = function(url,callback){
+		fetchApi(graph,url,function(stream){
+			callback(stream);
+		});
+	}
+
+	this.getProfilePicture = function(id,callback){
+		fetchApi(graph,'/'+id+'/picture/',function(url){
+			callback(url,id);
+		});
 	}
 
 	function fetchApi(graph,querystring,callback)
@@ -40,7 +52,7 @@ var facebookFeed = function(graph){
 			res.on('data',function(chunk){
 				codePart += chunk;
 			});
-			res.on('end',function(){				
+			res.on('end',function(){
 				var codeData = JSON.parse(codePart);
 				if(codeData.error)
 				{
@@ -58,9 +70,9 @@ var facebookFeed = function(graph){
 				graph.authorize(credentials, function (err, facebookRes) {
 			      	var error = "null";
 			      	if(err){error = err;}
-			      	callback(error);			      			      	
-			  	});			
-			});		
+			      	callback(error);
+			  	});
+			});
 		}).on('error', function(e){
 			console.log('error: '+e.message);
 			console.log( e.stack );

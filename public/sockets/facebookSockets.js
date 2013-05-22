@@ -5,10 +5,12 @@ socket.on('facebook_receiveHtml',function(html) {
 
 socket.on('facebook_getHomeFeed',function(html){
 	$('#homeFeed').html(html);
+	facebook_HomeFeedSetNextPageTrigger(socket);
 });
 
-socket.on('facebook_loadStyle',function(style){
-	$('head').append('<link rel="stylesheet" href="'+style+'" type="text/css" />');
+socket.on('facebook_getHomeFeedNextPage',function(html){
+	$('#homeFeed').append(html);
+	facebook_HomeFeedSetNextPageTrigger(socket);
 });
 
 socket.emit('facebook_getHtml');

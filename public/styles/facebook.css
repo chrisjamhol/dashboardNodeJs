@@ -1,6 +1,7 @@
 #facebook_app{
 	height: 100%;
 	background-color: #e5e5e5;
+	max-width: 800px;
 }
 
 .facebook_post{
@@ -9,22 +10,30 @@
 	background-color: white;
 }
 
+	.facebook_post_wrapper{
+		padding: 10px;
+	}
+
 /* facebook_heading --------------------------------*/
 
 .facebook_heading{
 	height: 50px;
 }
-	.facebook_heading_picture,.facebook_heading_info{float: left;}
+	.facebook_heading_picture,.facebook_heading_info{float: left; margin-right: 10px;}
 
 	.facebook_heading_info_name{margin: 3px;}
 	.facebook_heading_info_withTags{color:lightgray; font-size: 8px;}
-	.facebook_heading_info_shareTime{color:lightgray; font-size: 8px;}
+	.facebook_heading_info_shareTime{color:lightgray; font-size: 12px;}
 
 /* facebook_body --------------------------------*/
 
 .facebook_body{
-
+	height: 100%;
 }
+
+	/* facebook --> photo */
+	.facebook_body_images{width: 100%;}
+		.facebook_body_image img{display: block; margin: auto; max-width: 750px;}
 
 /* facebook_footer --------------------------------*/
 

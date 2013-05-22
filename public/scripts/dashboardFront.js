@@ -5,6 +5,9 @@ $('document').ready(function(){
   	});
 	socket.emit('loadApps');
 	//socket.emit('loadApp','facebook');
+
+	socket.on('loadScript',function(script){$('head').append('<script src="'+script+'"></script>');});
+	socket.on('loadStyle',function(style){$('head').append('<link rel="stylesheet" type="text/css" href="'+style+'">');});
 });
 function htmlEncode(html){return $('<div>').text(html).html();}
 function htmlDecode(string){return $('<div>').html(string).text();}
